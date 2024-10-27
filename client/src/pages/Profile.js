@@ -13,6 +13,7 @@ const Profile = () => {
   // Simulated fetching user profile data
   useEffect(() => {
     const fetchProfileData = async () => {
+      console.log("user",user)
       if (user) {
         const fetchedData = {
           username: user.username,
@@ -20,6 +21,7 @@ const Profile = () => {
           age: user.age || 'N/A', // Replace with actual data
           retirementAge: user.retirementAge || 'N/A', // Replace with actual data
           goals:{...user.goals},
+          currentSavings:user.currentSavings ||0,
           contributions: [
             { type: 'TRS', amount: 500 },
             { type: '403(b)', amount: 300 },
@@ -65,6 +67,7 @@ const Profile = () => {
           age: user.age || 'N/A', // Replace with actual data
           retirementAge: user.retirementAge || 'N/A', // Replace with actual data
           goals:{...user.goals},
+          currentSavings:user.currentSavings ||0,
 
         }}
         validationSchema={validationSchema}
@@ -145,6 +148,21 @@ const Profile = () => {
                   <p>{profileData.retirementAge}</p>
                 )}
                 <ErrorMessage name="retirementAge" component="div" className="text-red-500 text-sm" />
+              </div>
+              <div className="mb-2">
+                <label className="block font-medium">Current Savings</label>
+                {isEditing ? (
+                  <Field
+                    name="currentSavings"
+                    type="number"
+                    value={values.currentSavings}
+                    onChange={handleChange}
+                    className="border rounded p-2 w-full"
+                  />
+                ) : (
+                  <p>{profileData.currentSavings}</p>
+                )}
+                <ErrorMessage name="currentSavings" component="div" className="text-red-500 text-sm" />
               </div>
             </div>
 

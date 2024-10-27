@@ -1,14 +1,26 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useAuth } from '../contexts/AuthContext';
 
 const ProjectionCalculator = () => {
+  const [result, setResult] = useState(null); // State to hold the result
+  const {user}=useAuth()
+  const calculateYearsToRetirement = (targetDateString, currentAge, retirementAge) => {
+    const targetDate = new Date(targetDateString);
+    const currentDate = new Date();
+    const yearsToRetirement = (targetDate - currentDate) / (1000 * 60 * 60 * 24 * 365); // Convert milliseconds to years
+  
+    // Ensure years to retirement falls within the user's retirement age window
+    const remainingYears = retirementAge - currentAge;
+    return Math.max(1, Math.min(Math.round(yearsToRetirement), remainingYears)); // At least 1 year if positive
+  };
   const formik = useFormik({
     initialValues: {
-      currentSavings: 25000, // Dummy data
+      currentSavings: user.currentSavings,
       monthlyContribution: 500,
       growthRate: 5, // 5%
-      yearsToRetirement: 30,
+      yearsToRetirement: calculateYearsToRetirement(user.goals.targetDate, user.age, user.retirementAge),
     },
     validationSchema: Yup.object({
       monthlyContribution: Yup.number()
@@ -24,10 +36,10 @@ const ProjectionCalculator = () => {
     onSubmit: (values) => {
       const { monthlyContribution, growthRate, yearsToRetirement } = values;
       const futureValue = calculateProjection(monthlyContribution, growthRate / 100, yearsToRetirement);
-      alert(`Projected Income: $${futureValue.toFixed(2)}`);
+      setResult(`Projected Income: $${futureValue.toFixed(2)}`);
     },
   });
-
+  
   const calculateProjection = (monthlyContribution, growthRate, yearsToRetirement) => {
     let futureValue = formik.values.currentSavings;
     const totalMonths = yearsToRetirement * 12;
@@ -84,6 +96,13 @@ const ProjectionCalculator = () => {
           Calculate Projection
         </button>
       </form>
+
+      {/* Display the result */}
+      {result && (
+        <div className="mt-4 p-4 bg-green-100 border border-green-300 text-green-700 rounded">
+          {result}
+        </div>
+      )}
     </div>
   );
 };

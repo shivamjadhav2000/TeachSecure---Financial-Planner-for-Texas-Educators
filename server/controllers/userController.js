@@ -27,7 +27,7 @@ const profileUpdate = async (req, res) => {
     if (targetAmount) user.goals.targetAmount = targetAmount;
     if (targetDate) user.goals.targetDate = targetDate;
     if (currentSavings) user.currentSavings = currentSavings;
-
+    console.log("user",user)
     await user.save();
     return responseHandler.handleSuccessResponse(res, 'Profile updated successfully', 200);
 
@@ -39,4 +39,21 @@ const profileUpdate = async (req, res) => {
   }
 };
 
-module.exports = { profileUpdate };
+
+const setRetirementGoal=async (req,res)=>{
+  try{
+  const user=req.user;
+  const {targetDate,targetAmount} =req.body;
+  console.log("data==",req.body)
+  const userData=await User.findById(user._id);
+  userData.goals.targetAmount=targetAmount;
+  userData.goals.targetDate=new Date(targetDate);
+  userData.save();
+  return responseHandler.handleSuccessResponse(res,'Successfully set Goal Target')
+  }
+  catch(err){
+    return responseHandler.handleException(res, err);
+  }
+}
+
+module.exports = { profileUpdate,setRetirementGoal };

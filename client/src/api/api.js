@@ -43,5 +43,19 @@ export async function profileUpdate(data,token){
         body: JSON.stringify(data),
 });
     return  response.json()
+}
+
+export async function SetTargetGoal(data,token){
+  console.log("data",data)
+  const response=await fetch(BaseUrl+"/api/common/users/set-goal",{
+    method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization:'Bearer '+ token
+        },
+        body: JSON.stringify(data),
+  })
+  console.log("heyyyy",response)
+  return  response.json()
 
 }

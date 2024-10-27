@@ -1,24 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { useAuth } from '../contexts/AuthContext';
 
 const ScenarioAnalysis = () => {
+  const { user } = useAuth();
+  const [results, setResults] = useState([]);
+
+  const calculateYearsToRetirement = (targetDateString, currentAge, retirementAge) => {
+    const targetDate = new Date(targetDateString);
+    const currentDate = new Date();
+    const yearsToRetirement = (targetDate - currentDate) / (1000 * 60 * 60 * 24 * 365); // Convert milliseconds to years
+    const remainingYears = retirementAge - currentAge;
+    return Math.max(1, Math.min(Math.round(yearsToRetirement), remainingYears)); // At least 1 year if positive
+  };
+
   const formik = useFormik({
     initialValues: {
-      currentSavings: 25000, // Dummy data
+      currentSavings: user.currentSavings,
       monthlyContribution: 500,
-      yearsToRetirement: 30,
+      yearsToRetirement: calculateYearsToRetirement(user.goals.targetDate.$date, user.age, user.retirementAge),
     },
     validationSchema: Yup.object({
-      currentSavings: Yup.number()
-        .required('Required')
-        .min(0, 'Must be at least $0'),
-      monthlyContribution: Yup.number()
-        .required('Required')
-        .min(1, 'Must be at least $1'),
-      yearsToRetirement: Yup.number()
-        .required('Required')
-        .min(1, 'Must be at least 1 year'),
+      currentSavings: Yup.number().required('Required').min(0, 'Must be at least $0'),
+      monthlyContribution: Yup.number().required('Required').min(1, 'Must be at least $1'),
+      yearsToRetirement: Yup.number().required('Required').min(1, 'Must be at least 1 year'),
     }),
     onSubmit: (values) => {
       analyzeScenarios(values);
@@ -26,7 +32,6 @@ const ScenarioAnalysis = () => {
   });
 
   const analyzeScenarios = (values) => {
-    const results = [];
     const scenarios = [
       { label: 'Increase Contribution by 10%', change: values.monthlyContribution * 1.1 },
       { label: 'Decrease Contribution by 10%', change: values.monthlyContribution * 0.9 },
@@ -34,20 +39,19 @@ const ScenarioAnalysis = () => {
       { label: 'Retire 5 Years Later', change: values.yearsToRetirement + 5 },
     ];
 
-    scenarios.forEach((scenario) => {
+    const newResults = scenarios.map((scenario) => {
       let futureValue = values.currentSavings;
       const totalMonths = (scenario.label.includes('Retire') ? scenario.change * 12 : values.yearsToRetirement * 12);
 
       for (let i = 0; i < totalMonths; i++) {
-        futureValue += scenario.change;
-        futureValue *= 1.05 / 12; // Assuming a 5% growth rate for simplicity
+        futureValue += scenario.label.includes('Contribution') ? scenario.change : values.monthlyContribution;
+        futureValue *= 1 + 0.05 / 12; // Compounding monthly with 5% growth rate
       }
 
-      results.push({ label: scenario.label, projectedIncome: futureValue.toFixed(2) });
+      return { label: scenario.label, projectedIncome: futureValue.toFixed(2) };
     });
 
-    // Store the results in the state or update the UI accordingly
-    alert(JSON.stringify(results, null, 2)); // Displaying the results in an alert for now
+    setResults(newResults);
   };
 
   return (
@@ -94,6 +98,18 @@ const ScenarioAnalysis = () => {
           Analyze Scenarios
         </button>
       </form>
+
+      {/* Display results */}
+      {results.length > 0 && (
+        <div className="mt-4 space-y-4">
+          {results.map((res, idx) => (
+            <div key={idx} className="p-4 bg-green-100 border border-green-300 text-green-700 rounded">
+              <p><strong>{res.label}</strong></p>
+              <p>Projected Income: ${res.projectedIncome}</p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
