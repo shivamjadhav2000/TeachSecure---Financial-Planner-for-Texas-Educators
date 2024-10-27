@@ -10,7 +10,8 @@ Projection Calculator: Estimate future retirement income based on current contri
 Scenario Analysis: Let users test different scenarios (e.g., changing contribution rates, early/late retirement) to see how it affects their retirement savings.
 Investment Growth Estimation: Provide growth estimates with adjustable variables for growth rate, tax benefits, and compounding frequency.
 
-3. Contribution Management & Balancing
+3. Contribution Management & Ba
+lancing
 Contribution Balancer: Suggest the optimal split for contributions across TRS, 403(b), and IRA to maximize tax advantages and growth potential.
 Monthly Contribution Tracker: Track monthly contributions for each account, helping users stay consistent.
 Contribution Adjustment Alerts: Notify users when they could adjust contributions based on recent market changes or tax implications.
