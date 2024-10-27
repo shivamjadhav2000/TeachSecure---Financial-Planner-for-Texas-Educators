@@ -8,7 +8,7 @@ const Navigation = () => {
   return (
     <nav className="bg-gray-800 p-4">
       <div className="flex justify-between items-center">
-        <div className="text-white text-lg font-bold">TeachSecure</div>
+        <div className="text-white text-lg font-bold">Financial Planner</div>
         <ul className="flex space-x-4">
           <li>
             <Link to="/Dashboard" className="text-white hover:text-gray-300">

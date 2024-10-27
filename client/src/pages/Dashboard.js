@@ -7,7 +7,7 @@ const Dashboard = () => {
   const { user } = useAuth(); // Retrieve user context
   const dummyData = {
     totalContributions: 25000,
-    savingsGoal: 50000,
+    savingsGoal: user.goals.targetAmount,
     recentActivity: [
       { date: '2024-10-20', action: 'Contribution of $500 to TRS' },
       { date: '2024-10-15', action: 'Updated 403(b) allocation' },

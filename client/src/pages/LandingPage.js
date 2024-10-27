@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const LandingPage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
-      <h1 className="text-5xl font-extrabold mb-4 text-primary">Welcome to TeachSecure</h1>
+      <h1 className="text-5xl font-extrabold mb-4 text-primary">Welcome to Financial Planner</h1>
       <p className="text-xl text-center mb-8 text-secondary">
         A budgeting tool specifically designed for Texas teachers, helping you balance contributions and plan for a secure financial future.
       </p>
