@@ -5,6 +5,7 @@ const responseHandler = require('../helpers/responseHandler');
 const profileUpdate = async (req, res) => {
     const user=req.user
   const { username,age,retirementAge,targetAmount,targetDate,currentSavings } = req.body;
+  console.log("req",req.body)
   try {
     // Find user by ID (assumes req.user.id is set by authentication middleware)
     const user = await User.findById(req.user._id);

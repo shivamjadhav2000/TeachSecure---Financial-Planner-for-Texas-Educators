@@ -3,20 +3,22 @@ import { useAuth } from '../contexts/AuthContext';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { profileUpdate } from '../api/api';
+import {useAlert} from '../contexts/AlertContext'
 
 const Profile = () => {
   const { user, logoutUser } = useAuth();
   const [profileData, setProfileData] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-
+  const { addAlert } = useAlert();
   // Simulated fetching user profile data
   useEffect(() => {
     const fetchProfileData = async () => {
+      console.log("user==",user)
       if (user) {
         const fetchedData = {
           username: user.username,
           email: user.email,
-          currentAge: user.currentAge || 'N/A', // Replace with actual data
+          age: user.age || 'N/A', // Replace with actual data
           retirementAge: user.retirementAge || 'N/A', // Replace with actual data
           goals:{...user.goals},
           contributions: [
@@ -40,13 +42,13 @@ const Profile = () => {
   const validationSchema = Yup.object({
     username: Yup.string().required('Username is required'),
     email: Yup.string().email('Invalid email format').required('Email is required'),
-    currentAge: Yup.number()
+    age: Yup.number()
       .required('Current age is required')
       .min(18, 'Minimum age is 18')
       .max(100, 'Maximum age is 100'),
     retirementAge: Yup.number()
       .required('Retirement age is required')
-      .min(Yup.ref('currentAge'), 'Retirement age must be greater than current age')
+      .min(Yup.ref('age'), 'Retirement age must be greater than current age')
       .max(100, 'Maximum age is 100'),
   });
 
@@ -61,7 +63,7 @@ const Profile = () => {
         initialValues={{
           username: profileData.username,
           email: profileData.email,
-          currentAge: user.currentAge || 'N/A', // Replace with actual data
+          age: user.age || 'N/A', // Replace with actual data
           retirementAge: user.retirementAge || 'N/A', // Replace with actual data
           goals:{...user.goals},
 
@@ -70,7 +72,13 @@ const Profile = () => {
         onSubmit={async (values) => {
           console.log('Updated Profile Data:', values);
           setProfileData((prevData) => ({ ...prevData, ...values }));
-          await profileUpdate(values);
+         const data= await profileUpdate(values,user.token);
+         if (data && data.success){
+          addAlert(data.message,'success')
+        }
+        else{
+          addAlert(data.message,'error')
+        }
           setIsEditing(false);
         }}
       >
@@ -113,16 +121,16 @@ const Profile = () => {
                 <label className="block font-medium">Current Age</label>
                 {isEditing ? (
                   <Field
-                    name="currentAge"
+                    name="age"
                     type="number"
-                    value={values.currentAge}
+                    value={values.age}
                     onChange={handleChange}
                     className="border rounded p-2 w-full"
                   />
                 ) : (
-                  <p>{profileData.currentAge}</p>
+                  <p>{profileData.age}</p>
                 )}
-                <ErrorMessage name="currentAge" component="div" className="text-red-500 text-sm" />
+                <ErrorMessage name="age" component="div" className="text-red-500 text-sm" />
               </div>
 
               <div className="mb-2">

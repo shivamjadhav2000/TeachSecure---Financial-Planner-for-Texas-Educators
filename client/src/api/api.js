@@ -33,6 +33,7 @@ export async function signup(data){
 
 } 
 export async function profileUpdate(data,token){
+  console.log("data==",data)
     const response = await fetch(BaseUrl+'/api/common/users/profile-update', {
         method: 'POST',
         headers: {

@@ -22,7 +22,6 @@ const Login = () => {
   const handleSubmit = async (values, { setSubmitting, setErrors }) => {
     try {
         const data= await login(values);
-        console.log(data,"<<<<<<<<<<");
         if (data.success ){
             setUserData(data.data);
             addAlert('Login Successful', 'success');
