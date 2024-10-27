@@ -13,7 +13,6 @@ const Profile = () => {
   // Simulated fetching user profile data
   useEffect(() => {
     const fetchProfileData = async () => {
-      console.log("user==",user)
       if (user) {
         const fetchedData = {
           username: user.username,
@@ -70,7 +69,6 @@ const Profile = () => {
         }}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
-          console.log('Updated Profile Data:', values);
           setProfileData((prevData) => ({ ...prevData, ...values }));
          const data= await profileUpdate(values,user.token);
          if (data && data.success){
