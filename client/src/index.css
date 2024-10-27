@@ -1,0 +1,73 @@
+
+
+/* index.css */
+
+:root {
+  --primary-color: #1d4ed8;      /* Example blue color */
+  --secondary-color: #6b7280;    /* Example gray color */
+  --background-color: #f9fafb;
+  --background-color-secondary: #1f2937;
+  --text-color: #111827;
+  --padding-md: 1rem;
+  --padding-lg: 2rem;
+  --background: #f3f4f6; /* Light gray */
+  --primary: #1f2937; /* Dark gray for primary text */
+  --secondary: #374151; /* Medium gray for secondary text */
+  --button: #3b82f6; /* Blue button */
+  --button-hover: #2563eb; /* Darker blue on hover */
+  --button-accent: #22c55e; /* Green button */
+  --button-accent-hover: #16a34a; /* Darker green on hover */
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+
+
+/* Example Tailwind customization using global variables */
+.text-primary {
+  color: var(--primary-color);
+}
+
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.border-primary {
+  border-color: var(--primary-color);
+}
+.Alert {
+  background-color: #28a745;
+  color: white;
+  padding: 8px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  min-width: 200px;
+  cursor: pointer;
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
